@@ -1,0 +1,5 @@
+# Ignore compiled output from Maven
+target/*
+
+# Since we distribute through Github, allow the fat JAR.
+!target/OktaAWSCLI-*-jar-with-dependencies.jar
