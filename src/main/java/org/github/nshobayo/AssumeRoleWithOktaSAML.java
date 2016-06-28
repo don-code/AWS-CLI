@@ -126,26 +126,12 @@ public class AssumeRoleWithOktaSAML {
 	
 	/* Parses application's config file for app URL and Okta Org */
 	private static void extractCredentials() throws IOException{
-		BufferedReader oktaBr = new BufferedReader(new FileReader(new File (System.getProperty("user.dir")) +"/oktaAWSCLI.config"));
-		
-		//extract oktaOrg and oktaAWSAppURL from Okta settings file
-		String line = oktaBr.readLine();
-		while(line!=null){
-			//proceed if not a line comment
-			if(!line.startsWith("#")){
-				if(line.contains("OKTA_ORG")){
-					oktaOrg = line.substring(line.indexOf("=")+1).trim();
-				}
-				else if( line.contains("OKTA_AWS_APP_URL")){
-					oktaAWSAppURL = line.substring(line.indexOf("=")+1).trim();
-				}
-				else if( line.contains("OKTA_APP_LABEL")){
-					oktaAppLabel = line.substring(line.indexOf("=")+1).trim();
-				}
-			}
-			line = oktaBr.readLine();
-		}	
-		oktaBr.close();
+		Properties credentialsFile = new Properties();
+		credentialsFile.load(new FileInputStream(System.getProperty("user.dir") + "/oktaAWSCLI.config"));
+
+		oktaOrg = credentialsFile.getProperty("OKTA_ORG");
+		oktaAWSAppURL = credentialsFile.getProperty("OKTA_AWS_APP_URL");
+		oktaAppLabel = credentialsFile.getProperty("OKTA_APP_LABEL");
 	}
 
 	/*Uses user's credentials to obtain Okta session Token */
