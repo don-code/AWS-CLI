@@ -84,6 +84,10 @@ public class AssumeRoleWithOktaSAML {
 	
 	private static AWSSecurityTokenServiceClient buildStsClient()
 	{
+		// The SDK requires credentials for all requests, including requests to obtain credentials.
+		// Use fake, meaningless credentials to perform this request to prevent an exception.
+		AWSCredentials blankCredentials = new BasicAWSCredentials("", "");
+
 		AWSSecurityTokenServiceClient stsClient = null;
 		if (proxyHost != null && proxyPort > 0) {
 			ClientConfiguration clientConfig = new ClientConfiguration();
@@ -97,9 +101,9 @@ public class AssumeRoleWithOktaSAML {
 				clientConfig.setProxyDomain(proxyDomain);
 			}
 			
-			stsClient = new AWSSecurityTokenServiceClient(clientConfig);
+			stsClient = new AWSSecurityTokenServiceClient(blankCredentials, clientConfig);
 		} else {
-			stsClient = new AWSSecurityTokenServiceClient();
+			stsClient = new AWSSecurityTokenServiceClient(blankCredentials);
 		}
 		return stsClient;
 	}
